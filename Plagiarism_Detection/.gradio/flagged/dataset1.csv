@@ -1,0 +1,7 @@
+Upload a .txt file,Similarity Results,timestamp
+.gradio\flagged\Upload a .txt file\ba90c615459f8bd1907e\assignment.txt.txt,"{""headers"": [""1"", ""2"", ""3""], ""data"": [], ""metadata"": null}",2026-07-03 04:52:26.438892
+.gradio\flagged\Upload a .txt file\60ab1dbc2501ecaeb3b1\assignment.txt.txt,"{""headers"": [""1"", ""2"", ""3""], ""data"": [], ""metadata"": null}",2026-07-03 04:52:29.861815
+.gradio\flagged\Upload a .txt file\7a13c575e362d6628ce5\assignment.txt.txt,"{""headers"": [""1"", ""2"", ""3""], ""data"": [], ""metadata"": null}",2026-07-03 04:52:57.085181
+.gradio\flagged\Upload a .txt file\587a493ef5815f66374e\assignment.txt,"{""headers"": [""Document"", ""Similarity (%)""], ""data"": [[""doc1.txt"", 77.67], [""doc4.txt"", 77.52], [""doc2.txt"", 75.39], [""doc3.txt"", 9.69]], ""metadata"": null}",2026-07-03 05:20:28.746879
+.gradio\flagged\Upload a .txt file\22c240e470cf91ee8796\assignment.txt,"{""headers"": [""Document"", ""Similarity (%)""], ""data"": [[""doc1.txt"", 77.67], [""doc4.txt"", 77.52], [""doc2.txt"", 75.39], [""doc3.txt"", 9.69]], ""metadata"": null}",2026-07-03 05:27:12.942587
+.gradio\flagged\Upload a .txt file\efbe1aafc9175aae34b1\assignment.txt,"{""headers"": [""Document"", ""Similarity (%)""], ""data"": [[""doc1.txt"", 77.67], [""doc4.txt"", 77.52], [""doc2.txt"", 75.39], [""doc3.txt"", 9.69]], ""metadata"": null}",2026-07-03 05:27:15.156353
