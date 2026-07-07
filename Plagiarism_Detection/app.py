@@ -1,31 +1,152 @@
+import os
 import gradio as gr
 import pandas as pd
 
-from plagiarism import compare_uploaded_document
+from plagiarism import compare_documents
+
+# ==========================================================
+# THEME
+# ==========================================================
+
+theme = gr.themes.Soft()
+
+# ==========================================================
+# BACKEND
+# ==========================================================
+
+def plagiarism_checker(original_file, suspected_file):
+
+    if original_file is None:
+        raise gr.Error("Please upload the original document.")
+
+    if suspected_file is None:
+        raise gr.Error("Please upload the suspected document.")
+
+    # Read original file
+    with open(original_file.name, "r", encoding="utf-8") as f:
+        original_text = f.read()
+
+    # Read suspected file
+    with open(suspected_file.name, "r", encoding="utf-8") as f:
+        suspected_text = f.read()
+
+    # Calculate similarity
+    similarity = compare_documents(
+        original_text,
+        suspected_text
+    )
+
+    # Determine plagiarism level
+    if similarity >= 80:
+        status = "🔴 High Similarity"
+    elif similarity >= 50:
+        status = "🟠 Moderate Similarity"
+    elif similarity >= 20:
+        status = "🟡 Low Similarity"
+    else:
+        status = "🟢 Very Low Similarity"
+
+    result = pd.DataFrame(
+        {
+            "Original Document": [os.path.basename(original_file.name)],
+            "Suspected Document": [os.path.basename(suspected_file.name)],
+            "Similarity (%)": [similarity],
+            "Status": [status],
+        }
+    )
+
+    return result
 
 
-def plagiarism_checker(file):
+# ==========================================================
+# CUSTOM CSS
+# ==========================================================
 
-    # Read uploaded file
-    with open(file.name, "r", encoding="utf-8") as f:
-        text = f.read()
+css = """
+.gradio-container{
+    max-width:1000px !important;
+    margin:auto;
+}
 
-    # Get results from backend
-    results = compare_uploaded_document(text)
+h1{
+    text-align:center;
+}
 
-    # Convert list of dictionaries into DataFrame
-    return pd.DataFrame(results)
+footer{
+    visibility:hidden;
+}
+"""
 
 
-demo = gr.Interface(
-    fn=plagiarism_checker,
-    inputs=gr.File(label="Upload a .txt file"),
-    outputs=gr.Dataframe(
-        headers=["Document", "Similarity (%)"],
-        label="Similarity Results"
-    ),
-    title="📄 Plagiarism Detection System",
-    description="Upload a text document to compare it with the dataset."
-)
+# ==========================================================
+# UI
+# ==========================================================
+
+with gr.Blocks(theme=theme, css=css) as demo:
+
+    gr.Markdown(
+        """
+# 📄 Plagiarism Detection System
+
+Compare two text documents using **TF-IDF** and **Cosine Similarity**.
+"""
+    )
+
+    with gr.Row():
+
+        original_file = gr.File(
+            label="📄 Original Document",
+            file_types=[".txt"],
+            type="filepath"
+        )
+
+        suspected_file = gr.File(
+            label="📑 Suspected Document",
+            file_types=[".txt"],
+            type="filepath"
+        )
+
+    check_btn = gr.Button(
+        "🔍 Check Similarity",
+        variant="primary",
+        size="lg"
+    )
+
+    output = gr.Dataframe(
+        headers=[
+            "Original Document",
+            "Suspected Document",
+            "Similarity (%)",
+            "Status"
+        ],
+        interactive=False,
+        label="Comparison Result"
+    )
+
+    check_btn.click(
+        fn=plagiarism_checker,
+        inputs=[
+            original_file,
+            suspected_file
+        ],
+        outputs=output
+    )
+
+    gr.Markdown(
+        """
+### 📌 Similarity Guide
+
+| Similarity | Interpretation |
+|------------|----------------|
+| 🟢 0–19% | Very Low Similarity |
+| 🟡 20–49% | Low Similarity |
+| 🟠 50–79% | Moderate Similarity |
+| 🔴 80–100% | High Similarity |
+"""
+    )
+
+# ==========================================================
+# Launch
+# ==========================================================
 
 demo.launch()
